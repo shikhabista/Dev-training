@@ -1,6 +1,8 @@
-﻿using Dotnet_Mvc.Dtos;
+﻿using Dapper;
+using Dotnet_Mvc.Dtos;
 using Dotnet_Mvc.Enums;
 using Dotnet_Mvc.Models;
+using Dotnet_Mvc.Providers;
 using Dotnet_Mvc.Services.Interface;
 using Dotnet_Mvc.ViewModel;
 
@@ -12,16 +14,30 @@ public class UserService : IUserService
 
     public async Task<UserModel> AddUserAsync(NewUseDto dto)
     {
-        var id = Guid.NewGuid();
+        const string query =
+            "INSERT INTO public.users ( user_name, email, password,address, rec_date, status)" +
+            " values (@userName, @email, @password,@address, @recDate, @status)returning id";
+        var conn = ConnectionProvider.GetConnection();
+        var newUserId = await conn.ExecuteAsync(query,
+            new
+            {
+                userName = dto.UserName, email = dto.Email, password = dto.Password, address = dto.Address,
+                recDate = DateTime.Now.ToUniversalTime(),
+                status = (int)StatusEnum.Active
+            });
+
+        const string resQuery = "select * from public.users where id = @userId";
+        var res = conn.QueryFirstOrDefault(resQuery, new { userId = newUserId });
+        conn.Close();
         var model = new UserModel
         {
-            Id = id,
-            UserName = dto.UserName,
-            Email = dto.Email,
-            Address = dto.Address,
-            Password = dto.Password,
+            Id = Guid.NewGuid(),
+            UserName = res.UserName,
+            Email = res.Email,
+            Address = res.Address,
+            Password = res.Password,
+            Status = res.Status
         };
-        _list.Add(model);
         return model;
     }
 
