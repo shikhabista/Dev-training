@@ -1,12 +1,11 @@
-using Dotnet_Mvc.Services;
-using Dotnet_Mvc.Services.Interface;
+using Dotnet_Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddScoped<IUserService, UserService>();
+builder.UseDbContext();
 
 var app = builder.Build();
 

@@ -8,7 +8,7 @@ namespace Dotnet_Mvc.Controllers;
 
 public class UserController : Controller
 {
-    private static List<UserModel> _list = new List<UserModel>();
+    private static List<UserModel> _list = new();
     private readonly IUserService _userService;
 
     public UserController(IUserService userService)
@@ -25,23 +25,31 @@ public class UserController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(AddUserVm vm)
     {
-        var existing = _list.FirstOrDefault(x => x.UserName == vm.Name.Trim());
-        if (existing == null)
+        try
         {
-            var dto = new NewUseDto
+            var existing = _list.FirstOrDefault(x => x.UserName == vm.Name.Trim());
+            if (existing == null)
             {
-                UserName = vm.Name,
-                Email = vm.Email,
-                Address = vm.Address,
-                Password = vm.Pass
-            };
-            var data = await _userService.AddUserAsync(dto);
-            _list.Add(data);
-            return RedirectToAction("UserReport");
+                var dto = new NewUseDto
+                {
+                    UserName = vm.Name,
+                    Email = vm.Email,
+                    Address = vm.Address,
+                    Password = vm.Pass
+                };
+                var data = await _userService.AddUserAsync(dto);
+                _list.Add(data);
+                return RedirectToAction("UserReport");
+            }
+            else
+            {
+                throw new Exception("User with same name already exists");
+            }
         }
-        else
+        catch (Exception e)
         {
-            throw new Exception("User with same name already exists");
+            Console.WriteLine(e);
+            throw;
         }
     }
 
@@ -53,38 +61,98 @@ public class UserController : Controller
 
     public IActionResult Edit(Guid id)
     {
-        var existing = _list.FirstOrDefault(x => x.Id == id);
-        if (existing == null)
+        try
         {
-            throw new Exception("User not found");
-        }
-        else
-        {
-            var res = new EditUserVm
+            var existing = _list.FirstOrDefault(x => x.Id == id);
+            if (existing == null)
             {
-                UserId = existing.Id,
-                UserName = existing.UserName,
-                Email = existing.Email,
-                Address = existing.Address,
-            };
-            return View(res);
+                throw new Exception("User not found");
+            }
+            else
+            {
+                var res = new EditUserVm
+                {
+                    UserId = existing.Id,
+                    UserName = existing.UserName,
+                    Email = existing.Email,
+                    Address = existing.Address,
+                };
+                return View(res);
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
         }
     }
 
     [HttpPost]
     public async Task<IActionResult> Edit(EditUserVm vm)
     {
-        var details = _list.Find(x => x.Id == vm.UserId);
-
-        if (details == null)
+        try
         {
-            throw new Exception("User not found");
-        }
-        else
-        {
-            _userService.EditUserAsync(vm);
-        }
+            var details = _list.Find(x => x.Id == vm.UserId);
 
-        return RedirectToAction("UserReport");
+            if (details == null)
+            {
+                throw new Exception("User not found");
+            }
+            else
+            {
+                _userService.EditUserAsync(vm);
+            }
+
+            return RedirectToAction("UserReport");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        try
+        {
+            var user = _list.FirstOrDefault(x => x.Id == id);
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
+            else
+            {
+                _userService.RemoveUserAsync(user.Id);
+                return RedirectToAction("UserReport");
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+
+    public async Task<IActionResult> Add(AddUserVm vm)
+    {
+        try
+        {
+            var dto = new NewUseDto
+            {
+                UserName = vm.Name.Trim(),
+                Email = vm.Email,
+                Address = vm.Address,
+                Password = vm.Pass
+            };
+            await _userService.CreateUserAsync(dto);
+            return RedirectToAction("UserReport");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }

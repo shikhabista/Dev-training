@@ -1,4 +1,5 @@
-﻿@model List<UserModel>
+﻿@using Dotnet_Mvc.Enums
+@model List<UserModel>
 
 @{
     ViewData["Title"] = "User Report";
@@ -10,20 +11,50 @@
         <td>User Name</td>
         <td>User Email</td>
         <td>User Address</td>
+        <td>Status</td>
         <td>Action</td>
     </tr>
     </thead>
     <tbody>
-    
-        @foreach (var u in Model)
-        {
-            <tr>
+
+    @foreach (var u in Model)
+    {
+        <tr>
             <td>@u.UserName</td>
             <td>@u.Email</td>
             <td>@u.Address</td>
-            <td><a asp-action="Edit" asp-route-id="@u.Id" class="btn btn-primary">Edit</a></td>
-            </tr>
-        }
-   
+            @if (u.Status == (int)StatusEnum.Active)
+            {
+                <td class="text-success">
+                    @Enum.GetName(typeof(StatusEnum), u.Status)
+                </td>
+            }
+            else
+            {
+                <td class="text-danger">
+                    @Enum.GetName(typeof(StatusEnum), u.Status)
+                </td>
+            }
+            @if (u.Status == (int)StatusEnum.Active)
+            {
+                <td><a asp-action="Edit"
+                       asp-route-id="@u.Id" class="btn btn-primary btn-sm">Edit
+                    </a>
+
+                    <a asp-action="Delete"
+                       asp-route-id="@u.Id"
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('Do you want to deactivate this user')">Deactivate</a>
+                </td>
+            }
+            else
+            {
+                <td>
+                    <a class="disabled-link btn btn-secondary">No Action</a>
+                </td>
+            }
+        </tr>
+    }
+
     </tbody>
 </table>
