@@ -37,8 +37,7 @@ public class UserController : Controller
                     Address = vm.Address,
                     Password = vm.Pass
                 };
-                var data = await _userService.AddUserAsync(dto);
-                _list.Add(data);
+                _userService.AddUserAsync(dto);
                 return RedirectToAction("UserReport");
             }
             else
