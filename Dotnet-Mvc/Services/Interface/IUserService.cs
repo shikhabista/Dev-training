@@ -7,7 +7,7 @@ namespace Dotnet_Mvc.Services.Interface;
 
 public interface IUserService
 {
-    public Task<UserModel> AddUserAsync(NewUseDto dto);
+    void AddUserAsync(NewUseDto dto);
     void EditUserAsync(EditUserVm vm);
     void RemoveUserAsync(Guid id);
     public Task CreateUserAsync(NewUseDto dto);

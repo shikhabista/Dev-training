@@ -4,6 +4,7 @@ using Dotnet_Mvc.Entities;
 using Dotnet_Mvc.Enums;
 using Dotnet_Mvc.Models;
 using Dotnet_Mvc.Providers;
+using Dotnet_Mvc.Repository.Interface;
 using Dotnet_Mvc.Services.Interface;
 using Dotnet_Mvc.ViewModel;
 
@@ -11,20 +12,25 @@ namespace Dotnet_Mvc.Services;
 
 public class UserService : IUserService
 {
+    private readonly IUserRepo _userRepo;
+
+    public UserService(IUserRepo userRepo)
+    {
+        _userRepo = userRepo;
+    }
+
     private static List<UserModel> _list = new List<UserModel>();
 
-    public async Task<UserModel> AddUserAsync(NewUseDto dto)
+    public void AddUserAsync(NewUseDto dto)
     {
-        var model = new UserModel
+        var model = new User()
         {
-            Id = Guid.NewGuid(),
             UserName = dto.UserName,
-            Email = dto.Email,
+            Email = dto.Email ?? string.Empty,
             Address = dto.Address,
             Password = dto.Password,
         };
-        _list.Add(model);
-        return model;
+        _userRepo.Create(model);
     }
 
     public void EditUserAsync(EditUserVm vm)
