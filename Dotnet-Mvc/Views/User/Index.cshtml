@@ -1,34 +1,65 @@
-﻿@model Dotnet_Mvc.ViewModel.AddUserVm
+﻿@using Dotnet_Mvc.Enums
+@model List<Dotnet_Mvc.ViewModel.UserReportVm>
 
 @{
-    ViewData["Title"] = "Add User";
+    ViewData["Title"] = "User Report";
 }
 
-<form method="post" asp-action="Create">
-    <div class="container">
-        <div class="mt-5">
-            <div class="mb-3">
-                <label for="Name" class="form-label">User Name</label>
-                <input type="text" asp-for="Name" required="required" class="form-control w-25">
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="mb-3">
-                <label for="Email" class="form-label required">Email</label>
-                <input type="email" asp-for="Email" class="form-control w-25" required>
-            </div>
-            <div class="mb-3">
-                <label for="Address" class="form-label">Address</label>
-                <input type="text" asp-for="Address" class="form-control w-25">
-            </div>
-            <div class="mb-3">
-                <label for="Pass" class="form-label">Password </label>
-                <input type="password" asp-for="Password" class="form-control w-25" required>
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="mt-4">
-                <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure!')">Add</button>
-                <button type="reset" class="btn btn-danger">Reset</button>
-            </div>
-        </div>
-    </div>
-</form>
+<table class="table table-bordered table-striped table-hover" style="border-collapse: collapse">
+    <thead>
+    <tr>
+        <td>Name</td>
+        <td>Contact No</td>
+        <td>Address</td>
+        <td>Username</td>
+        <td>Email</td>
+        <td>Status</td>
+        <td>Action</td>
+    </tr>
+    </thead>
+    <tbody>
+
+    @foreach (var u in Model)
+    {
+        <tr>
+            <td>@u.Name</td>
+            <td>@u.ContactNo</td>
+            <td>@u.Address</td>
+            <td>@u.Username</td>
+            <td>@u.Email</td>
+            @if (u.IsActive)
+            {
+                <td class="text-success">
+                    @u.Status
+                </td>
+            }
+            else
+            {
+                <td class="text-danger">
+                    @u.Status
+                </td>
+            }
+            @if (u.IsActive)
+            {
+                <td>
+                    <a asp-action="Edit"
+                       asp-route-id="@u.Id" class="btn btn-primary btn-sm">Edit
+                    </a>
+
+                    <a asp-action="Delete"
+                       asp-route-id="@u.Id"
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('Do you want to deactivate this user')">Deactivate</a>
+                </td>
+            }
+            else
+            {
+                <td>
+                    <a class="disabled-link btn btn-secondary">No Action</a>
+                </td>
+            }
+        </tr>
+    }
+
+    </tbody>
+</table>

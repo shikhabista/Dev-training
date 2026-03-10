@@ -8,5 +8,6 @@ public interface IUserService
     void AddUser(NewUserDto dto);
     void EditUser(User user, UserEditDto dto);
     void RemoveUserAsync(User user);
-    public Task CreateUserAsync(NewUserDto dto);
+    Task CreateUserAsync(NewUserDto dto);
+    User GetUser(string username, string password);
 }

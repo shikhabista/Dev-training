@@ -14,5 +14,11 @@ public class ApplicationDbContext(IConfiguration configuration) : DbContext
         optionsBuilder.UseLazyLoadingProxies();
     }
 
-    public DbSet<User> User { get; set; }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<User>()
+            .Property(x => x.RecStatus)
+            .HasConversion<string>();
+    }
 }

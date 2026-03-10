@@ -7,7 +7,7 @@ namespace Dotnet_Mvc.Entities
     {
         public string Name { get; set; }
         public string? ContactNo { get; set; }
-        public required string UserName { get; set; }
+        public required string Username { get; set; }
         public required string Email { get; set; }
         public required string Password { get; set; }
         public string? Address { get; set; }

@@ -5,6 +5,7 @@ using Dotnet_Mvc.Enums;
 using Dotnet_Mvc.Providers;
 using Dotnet_Mvc.Repository.Interface;
 using Dotnet_Mvc.Services.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dotnet_Mvc.Services;
 
@@ -21,17 +22,22 @@ public class UserService : IUserService
     {
         var model = new User
         {
-            UserName = dto.UserName,
+            Name = dto.Name,
+            ContactNo = dto.ContactNo,
+            Username = dto.UserName,
             Email = dto.Email ?? string.Empty,
             Address = dto.Address,
             Password = dto.Password,
         };
         _userRepo.Create(model);
+        _userRepo.Commit();
     }
 
     public void EditUser(User user, UserEditDto dto)
     {
-        user.UserName = dto.UserName;
+        user.Name = dto.Name;
+        user.ContactNo = dto.ContactNo;
+        user.Username = dto.UserName;
         user.Email = dto.Email;
         user.Address = dto.Address;
         _userRepo.Update(user);
@@ -40,7 +46,7 @@ public class UserService : IUserService
 
     public void RemoveUserAsync(User user)
     {
-        user.Status = (int)StatusEnum.Inactive;
+        user.Status = StatusEnum.Inactive;
         _userRepo.Update(user);
         _userRepo.Commit();
     }
@@ -70,5 +76,13 @@ public class UserService : IUserService
                 });
             conn.Close();
         }
+    }
+
+    public User GetUser(string username, string password)
+    {
+        username = username.Trim().ToLower();
+        password = password.Trim().ToLower();
+        var user = (_userRepo.GetQueryable().Where(a => (a.Username.Trim().ToLower() == username || a.Email.Trim().ToLower() == username) && a.Password.Trim().ToLower() == password)).FirstOrDefault();
+        return user ?? throw new Exception("Invalid Credentials");
     }
 }
