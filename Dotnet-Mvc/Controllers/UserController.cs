@@ -1,22 +1,24 @@
 ﻿using Dotnet_Mvc.Dtos;
 using Dotnet_Mvc.Models;
+using Dotnet_Mvc.Repository.Interface;
 using Dotnet_Mvc.Services.Interface;
 using Dotnet_Mvc.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dotnet_Mvc.Controllers;
 
 public class UserController : Controller
 {
-    private static List<UserModel> _list = new();
     private readonly IUserService _userService;
+    private readonly IUserRepo _userRepo;
 
-    public UserController(IUserService userService)
+    public UserController(IUserService userService, IUserRepo userRepo)
     {
         _userService = userService;
+        _userRepo = userRepo;
     }
 
-    // GET
     public IActionResult Index()
     {
         return View();
@@ -27,81 +29,14 @@ public class UserController : Controller
     {
         try
         {
-            var existing = _list.FirstOrDefault(x => x.UserName == vm.Name.Trim());
-            if (existing == null)
+            var dto = new NewUserDto
             {
-                var dto = new NewUseDto
-                {
-                    UserName = vm.Name,
-                    Email = vm.Email,
-                    Address = vm.Address,
-                    Password = vm.Pass
-                };
-                _userService.AddUserAsync(dto);
-                return RedirectToAction("UserReport");
-            }
-            else
-            {
-                throw new Exception("User with same name already exists");
-            }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-    }
-
-    public IActionResult UserReport()
-    {
-        var report = _list;
-        return View(report);
-    }
-
-    public IActionResult Edit(Guid id)
-    {
-        try
-        {
-            var existing = _list.FirstOrDefault(x => x.Id == id);
-            if (existing == null)
-            {
-                throw new Exception("User not found");
-            }
-            else
-            {
-                var res = new EditUserVm
-                {
-                    UserId = existing.Id,
-                    UserName = existing.UserName,
-                    Email = existing.Email,
-                    Address = existing.Address,
-                };
-                return View(res);
-            }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Edit(EditUserVm vm)
-    {
-        try
-        {
-            var details = _list.Find(x => x.Id == vm.UserId);
-
-            if (details == null)
-            {
-                throw new Exception("User not found");
-            }
-            else
-            {
-                _userService.EditUserAsync(vm);
-            }
-
+                UserName = vm.Name,
+                Email = vm.Email,
+                Address = vm.Address,
+                Password = vm.Password
+            };
+            _userService.AddUser(dto);
             return RedirectToAction("UserReport");
         }
         catch (Exception e)
@@ -111,20 +46,75 @@ public class UserController : Controller
         }
     }
 
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> UserReport()
+    {
+        var report = await _userRepo.GetQueryable().ToListAsync();
+        return View(report);
+    }
+
+    public async Task<IActionResult> Edit(long id)
     {
         try
         {
-            var user = _list.FirstOrDefault(x => x.Id == id);
+            var user = await _userRepo.GetQueryable().Where(a => a.Id == id).FirstOrDefaultAsync();
             if (user == null)
             {
                 throw new Exception("User not found");
             }
-            else
+
+            var res = new EditUserVm
             {
-                _userService.RemoveUserAsync(user.Id);
-                return RedirectToAction("UserReport");
+                UserId = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                Address = user.Address,
+            };
+            return View(res);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return RedirectToAction(nameof(UserReport));
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit(EditUserVm vm)
+    {
+        try
+        {
+            var user = await _userRepo.GetQueryable().Where(a => a.Id == vm.UserId).FirstOrDefaultAsync();
+            if (user == null)
+            {
+                throw new Exception("User not found");
             }
+
+            var dto = new UserEditDto
+            {
+                UserName = vm.UserName,
+                Email = vm.Email,
+                Address = vm.Address
+            };
+            _userService.EditUser(user, dto);
+            
+            return RedirectToAction("UserReport");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return RedirectToAction(nameof(UserReport));
+        }
+    }
+
+    public async Task<IActionResult> Delete(long id)
+    {
+        try
+        {
+            var user = await _userRepo.GetQueryable().Where(a => a.Id == id).FirstOrDefaultAsync();
+            if (user == null)
+                throw new Exception("User not found");
+            _userService.RemoveUserAsync(user);
+            return RedirectToAction("UserReport");
         }
         catch (Exception e)
         {
@@ -138,12 +128,12 @@ public class UserController : Controller
     {
         try
         {
-            var dto = new NewUseDto
+            var dto = new NewUserDto
             {
                 UserName = vm.Name.Trim(),
                 Email = vm.Email,
                 Address = vm.Address,
-                Password = vm.Pass
+                Password = vm.Password
             };
             await _userService.CreateUserAsync(dto);
             return RedirectToAction("UserReport");

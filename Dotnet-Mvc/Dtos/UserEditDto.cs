@@ -1,6 +1,6 @@
-﻿namespace Dotnet_Mvc.ViewModel;
+﻿namespace Dotnet_Mvc.Dtos;
 
-public class EditUserVm
+public class UserEditDto
 {
     public long UserId { get; set; }
     public string UserName { get; set; }

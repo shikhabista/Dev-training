@@ -8,22 +8,22 @@
     <div class="container">
         <div class="mt-5">
             <div class="mb-3">
-                <label for="Name" class="form-label">User Name <strong class="text-danger">*</strong></label>
+                <label for="Name" class="form-label">User Name</label>
                 <input type="text" asp-for="Name" required="required" class="form-control w-25">
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="mb-3">
-                <label for="Email" class="form-label">Email</label>
-                <input type="email" asp-for="Email" class="form-control w-25">
+                <label for="Email" class="form-label required">Email</label>
+                <input type="email" asp-for="Email" class="form-control w-25" required>
             </div>
             <div class="mb-3">
                 <label for="Address" class="form-label">Address</label>
                 <input type="text" asp-for="Address" class="form-control w-25">
             </div>
             <div class="mb-3">
-                <label for="Pass" class="form-label">Password <strong class="text-danger">*</strong></label>
-                <input type="password" required="required" asp-for="Pass" class="form-control w-25">
-                <span asp-validation-for="Pass" class="text-danger"></span>
+                <label for="Pass" class="form-label">Password </label>
+                <input type="password" asp-for="Password" class="form-control w-25" required>
+                <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="mt-4">
                 <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure!')">Add</button>
