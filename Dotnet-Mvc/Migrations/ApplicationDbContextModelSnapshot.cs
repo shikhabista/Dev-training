@@ -61,18 +61,19 @@ namespace Dotnet_Mvc.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("rec_date");
 
-                    b.Property<char>("RecStatus")
-                        .HasColumnType("character(1)")
+                    b.Property<string>("RecStatus")
+                        .IsRequired()
+                        .HasColumnType("text")
                         .HasColumnName("rec_status");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer")
                         .HasColumnName("status");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("user_name");
+                        .HasColumnName("username");
 
                     b.HasKey("Id")
                         .HasName("pk_user");
