@@ -1,0 +1,32 @@
+﻿@model Dotnet_Mvc.ViewModel.LoginVm
+
+@{
+    ViewData["Title"] = "Login";
+    Layout = "_authLayout";
+}
+
+<div class="my-5 d-flex justify-content-center">
+<div class="row col-4">
+    <form method="post" asp-action="Login">
+
+        <div class="card">
+            <h5 class="card-header">Login</h5>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label required">Username</label>
+                    <input type="text" asp-for="Username" required class="form-control">
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label required">Password</label>
+                    <input type="text" asp-for="Password" required="required" class="form-control">
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+        </div>
+    </form>
+</div>
+</div>
