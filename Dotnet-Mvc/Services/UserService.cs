@@ -2,11 +2,9 @@
 using Dotnet_Mvc.Dtos;
 using Dotnet_Mvc.Entities;
 using Dotnet_Mvc.Enums;
-using Dotnet_Mvc.Models;
 using Dotnet_Mvc.Providers;
 using Dotnet_Mvc.Repository.Interface;
 using Dotnet_Mvc.Services.Interface;
-using Dotnet_Mvc.ViewModel;
 
 namespace Dotnet_Mvc.Services;
 
@@ -19,11 +17,9 @@ public class UserService : IUserService
         _userRepo = userRepo;
     }
 
-    private static List<UserModel> _list = new List<UserModel>();
-
-    public void AddUserAsync(NewUseDto dto)
+    public void AddUser(NewUserDto dto)
     {
-        var model = new User()
+        var model = new User
         {
             UserName = dto.UserName,
             Email = dto.Email ?? string.Empty,
@@ -33,35 +29,23 @@ public class UserService : IUserService
         _userRepo.Create(model);
     }
 
-    public void EditUserAsync(EditUserVm vm)
+    public void EditUser(User user, UserEditDto dto)
     {
-        var details = _list.FirstOrDefault(x => x.Id == vm.UserId);
-        if (details == null)
-        {
-            throw new Exception("User not found");
-        }
-        else
-        {
-            details.UserName = vm.UserName;
-            details.Email = vm.Email;
-            details.Address = vm.Address;
-        }
+        user.UserName = dto.UserName;
+        user.Email = dto.Email;
+        user.Address = dto.Address;
+        _userRepo.Update(user);
+        _userRepo.Commit();
     }
 
-    public void RemoveUserAsync(Guid id)
+    public void RemoveUserAsync(User user)
     {
-        var userData = _list.FirstOrDefault(x => x.Id == id);
-        if (userData != null)
-        {
-            userData.Status = (int)StatusEnum.Inactive;
-        }
-        else
-        {
-            throw new Exception("User not found");
-        }
+        user.Status = (int)StatusEnum.Inactive;
+        _userRepo.Update(user);
+        _userRepo.Commit();
     }
 
-    public async Task CreateUserAsync(NewUseDto dto)
+    public async Task CreateUserAsync(NewUserDto dto)
     {
         var conn = ConnectionProvider.GetConnection();
         var existing = "select * from public.users where user_name = @userName";
