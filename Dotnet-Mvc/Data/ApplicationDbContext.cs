@@ -10,6 +10,8 @@ public class ApplicationDbContext(IConfiguration configuration) : DbContext
         base.OnConfiguring(optionsBuilder);
         optionsBuilder
             .UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+        optionsBuilder.UseSnakeCaseNamingConvention();
+        optionsBuilder.UseLazyLoadingProxies();
     }
 
     public DbSet<User> User { get; set; }
