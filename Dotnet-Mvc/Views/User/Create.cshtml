@@ -3,54 +3,56 @@
 @{
     ViewData["Title"] = "Create User";
 }
-<div class="row col-6 justify-content-center">
-    <form method="post" asp-action="Create">
-        <div class="container">
+<form method="post" asp-action="Create">
+    <div class="col-6 justify-content-center">
+        <div class="card">
+            <h5 class="card-header">Create User</h5>
+            <div class="card-body">
+                <div class="d-flex flex-row gap-2">
+                    <div class="col-6 d-flex flex-column gap-2">
+                        <div class="">
+                            <label for="Name" class="form-label required">Name</label>
+                            <input type="text" asp-for="Name" required class="form-control">
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="">
+                            <label for="Name" class="form-label required">Contact No</label>
+                            <input type="text" asp-for="ContactNo" required="required" class="form-control">
+                            <span asp-validation-for="ContactNo" class="text-danger"></span>
+                        </div>
+                        <div class="">
+                            <label for="Address" class="form-label">Address</label>
+                            <input type="text" asp-for="Address" class="form-control">
+                        </div>
+                        <div class="">
+                            <label for="Name" class="form-label">User Name</label>
+                            <input type="text" asp-for="Username" required="required" class="form-control">
+                            <span asp-validation-for="Username" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-6 d-flex flex-column gap-2">
+                        <div class="">
+                            <label for="Email" class="form-label required">Email</label>
+                            <input type="email" asp-for="Email" class="form-control" required>
+                        </div>
 
-            <div class="card">
-                <h5 class="card-header">Create User</h5>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <label for="Name" class="form-label required">Name</label>
-                        <input type="text" asp-for="Name" required class="form-control">
-                        <span asp-validation-for="Name" class="text-danger"></span>
+                        <div class="">
+                            <label for="Password" class="form-label required">Password </label>
+                            <input type="password" asp-for="Password" class="form-control" required>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div class="">
+                            <label for="ConfirmPassword" class="form-label required">Confirm Password </label>
+                            <input type="password" asp-for="ConfirmPassword" class="form-control" required>
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="Name" class="form-label required">Contact No</label>
-                        <input type="text" asp-for="ContactNo" required="required" class="form-control">
-                        <span asp-validation-for="ContactNo" class="text-danger"></span>
-                    </div>
-                    <div class="mb-3">
-                        <label for="Address" class="form-label">Address</label>
-                        <input type="text" asp-for="Address" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label for="Name" class="form-label">User Name</label>
-                        <input type="text" asp-for="Username" required="required" class="form-control">
-                        <span asp-validation-for="Username" class="text-danger"></span>
-                    </div>
-                    <div class="mb-3">
-                        <label for="Email" class="form-label required">Email</label>
-                        <input type="email" asp-for="Email" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="Password" class="form-label required">Password </label>
-                        <input type="password" asp-for="Password" class="form-control" required>
-                        <span asp-validation-for="Password" class="text-danger"></span>
-                    </div>
-                    <div class="mb-3">
-                        <label for="ConfirmPassword" class="form-label required">Confirm Password </label>
-                        <input type="password" asp-for="ConfirmPassword" class="form-control" required>
-                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure!')">Create</button>
-                    <button type="reset" class="btn btn-danger">Reset</button>
                 </div>
             </div>
-
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure!')">Create</button>
+                <button type="reset" class="btn btn-danger">Reset</button>
+            </div>
         </div>
-    </form>
-</div>
+    </div>
+</form>

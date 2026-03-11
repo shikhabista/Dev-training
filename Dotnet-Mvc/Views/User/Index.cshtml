@@ -5,9 +5,10 @@
     ViewData["Title"] = "User Report";
 }
 
-<table class="table table-bordered table-striped table-hover" style="border-collapse: collapse">
-    <thead>
+<table class="table table-bordered table-hover">
+    <thead class="bg-secondary text-white">
     <tr>
+        <td>S.N</td>
         <td>Name</td>
         <td>Contact No</td>
         <td>Address</td>
@@ -19,9 +20,13 @@
     </thead>
     <tbody>
 
+    @{
+        var sn = 1;
+    }
     @foreach (var u in Model)
     {
         <tr>
+            <td>@sn</td>
             <td>@u.Name</td>
             <td>@u.ContactNo</td>
             <td>@u.Address</td>
@@ -59,6 +64,7 @@
                 </td>
             }
         </tr>
+        sn++;
     }
 
     </tbody>

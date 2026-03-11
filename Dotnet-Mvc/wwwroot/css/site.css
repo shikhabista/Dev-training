@@ -25,3 +25,7 @@ body {
   content: "*";
   color: red;
 }
+
+.col-w-3 {
+  width: 25%;
+}

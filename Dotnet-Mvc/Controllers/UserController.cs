@@ -172,4 +172,9 @@ public class UserController : Controller
             throw;
         }
     }
+
+    public IActionResult AssignRole()
+    {
+        return View();
+    }
 }
