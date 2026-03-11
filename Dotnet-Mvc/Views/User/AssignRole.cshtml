@@ -1,7 +1,39 @@
-﻿
+﻿@model Dotnet_Mvc.ViewModel.RoleAssignVm
+
 @{
     ViewData["Title"] = "Assign Role";
     Layout = "_Layout";
 }
 
+
+<form method="post" asp-action="" xmlns="http://www.w3.org/1999/html">
+    <div class="col-4">
+        <div class="card">
+            <h5 class="card-header">Assign User Role</h5>
+            <div class="card-body">
+
+                <div class="form-group">
+                    <label for="User">User</label>
+                    <select asp-for="UserId" class="form-control">
+                    <option value="">-- Select --</option>
+                    <option value="">User1</option>
+                    <option value="">User2</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="Role">Role</label>
+                    <select asp-for="RoleId" class="form-control">
+                        <option value="">-- Select --</option>
+                        <option value="">Role1</option>
+                        <option value="">Role2</option>
+                    </select>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Assign</button>
+            </div>
+        </div>
+    </div>
+</form>
 
