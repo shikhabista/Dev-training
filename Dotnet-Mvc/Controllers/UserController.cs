@@ -22,12 +22,14 @@ public class UserController : Controller
         _userRepo = userRepo;
     }
 
+    [Authorize(Roles = "Admin, Manager")]
     [HttpGet]
     public IActionResult Create()
     {
         return View();
     }
 
+    [Authorize(Roles = "Admin, Manager")]
     [HttpPost]
     public async Task<IActionResult> Create(AddUserVm vm)
     {
@@ -71,6 +73,7 @@ public class UserController : Controller
         return View(vm);
     }
 
+    [Authorize(Roles = "Admin, Manager")]
     public async Task<IActionResult> Edit(long id)
     {
         try
@@ -98,7 +101,8 @@ public class UserController : Controller
             return RedirectToAction(nameof(Index));
         }
     }
-
+    
+    [Authorize(Roles = "Admin, Manager")]
     [HttpPost]
     public async Task<IActionResult> Edit(EditUserVm vm)
     {
@@ -129,6 +133,7 @@ public class UserController : Controller
         }
     }
 
+    [Authorize(Roles = "Admin, Manager")]
     public async Task<IActionResult> Delete(long id)
     {
         try
